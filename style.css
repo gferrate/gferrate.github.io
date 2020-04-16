@@ -6,6 +6,7 @@ body {
     background-color: #83858C;
     padding-right: 1rem;
     padding-left: 1rem;
+    background-image: url("ubuntu.jpg");
 }
 
 .writable {
@@ -29,17 +30,11 @@ body {
     resize: none;
 }
 
-.dollar {
-    color: rgb(255, 230, 0);
-}
-
 .terminal_window {
     margin: 0 auto;
     max-width: 800px;
     max-height: 500px;
-    tex-align: left;
     margin-top: 15px;
-    postion: relative;
     border-radius: 10px;
 }
 
