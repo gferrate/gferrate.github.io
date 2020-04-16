@@ -7,6 +7,9 @@ $(document).ready(function() {
     var typed = new Typed('#typed', options);*/
     var term_input = $("#terminal_content");
     var bash_profile = "[~]$ ";
+    var available_commands = [
+        'ls'
+    ];
 
     jQuery.fn.putCursorAtEnd = function() {
         return this.each(function() {
@@ -54,11 +57,23 @@ $(document).ready(function() {
         }
     );
 
-    const a = document.getElementById("terminal_content");
-
+    const term = document.getElementById("terminal_content");
     setInterval(function() {
-        a.scrollTop = a.scrollHeight - a.clientHeight;
+        term.scrollTop = term.scrollHeight - term.clientHeight;
     }, 5)
+
+    function get_last_command(last_text) {
+        var split_text = last_text.split(bash_profile);
+        return split_text[split_text.length - 1];
+    }
+
+    function execute_command(last_com) {
+        if (last_com == '') {
+            return ''
+        } else if (!available_commands.includes(last_com)) {
+            return `\n-bash: ${last_com}: command not found.`
+        }
+    }
 
     term_input.on("keydown", function(e) {
         var key_code = e.keyCode;
@@ -71,7 +86,9 @@ $(document).ready(function() {
             }
         } else if (key_code == 13) {
             e.preventDefault();
-            current_text += '\n' + bash_profile;
+            var last_command = get_last_command(current_text);
+            var response = execute_command(last_command);
+            current_text += response + '\n' + bash_profile;
             term_input.val(current_text);
         }
     });
