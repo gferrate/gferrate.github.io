@@ -8,8 +8,14 @@ $(document).ready(function() {
     var term_input = $("#terminal_content");
     var bash_profile = "[~]$ ";
     var available_commands = [
-        'ls'
+        'ls', 'help'
     ];
+    var short_description = {
+        'help': ''
+    }
+    var commands = {
+        'help': ''
+    }
 
     jQuery.fn.putCursorAtEnd = function() {
         return this.each(function() {
@@ -71,7 +77,9 @@ $(document).ready(function() {
         if (last_com == '') {
             return ''
         } else if (!available_commands.includes(last_com)) {
-            return `\n-bash: ${last_com}: command not found.`
+            return `\n-bash: ${last_com}: command not found. Type help for more info.`
+        } else {
+            return '\nHola segarra! under construction ;)'
         }
     }
 
