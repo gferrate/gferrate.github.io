@@ -1,5 +1,7 @@
 body {
     background-color: #83858C;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
 
 .writable {
@@ -29,8 +31,8 @@ body {
 
 .terminal_window {
     margin: 0 auto;
-    width: 600px;
-    height: 400px;
+    max-width: 800px;
+    max-height: 500px;
     tex-align: left;
     margin-top: 15px;
     postion: relative;
