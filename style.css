@@ -7,6 +7,8 @@ body {
     padding-right: 1rem;
     padding-left: 1rem;
     background-image: url("ubuntu.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .writable {
