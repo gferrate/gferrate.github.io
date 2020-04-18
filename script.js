@@ -124,6 +124,10 @@ $(document).ready(function() {
                 e.preventDefault();
                 return false;
             }
+        } else if (key_code == 37 || key_code == 39 || key_code == 38 || key_code == 40) {
+            // Arrows
+            e.preventDefault();
+            return false;
         } else if (key_code == 13) {
             e.preventDefault();
             var last_command = get_last_command(current_text);
