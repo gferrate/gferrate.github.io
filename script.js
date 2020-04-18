@@ -6,16 +6,9 @@ $(document).ready(function() {
     };
     var typed = new Typed('#typed', options);*/
     var term_input = $("#terminal_content");
-    var bash_profile = "[~]$ ";
-    var available_commands = [
-        'ls', 'help'
-    ];
-    var short_description = {
-        'help': ''
-    }
-    var commands = {
-        'help': ''
-    }
+    var bash_profile = "gferrate [~]$ ";
+    var closable = false;
+    var docker_stopped = false;
 
     jQuery.fn.putCursorAtEnd = function() {
         return this.each(function() {
@@ -38,22 +31,6 @@ $(document).ready(function() {
 
     };
 
-    function setCaretAtend(elem) {
-        var elemLen = 5;
-        if (document.selection) {
-            elem.focus();
-            var oSel = document.selection.createRange();
-            oSel.moveStart('character', -elemLen);
-            oSel.moveStart('character', elemLen);
-            oSel.moveEnd('character', 0);
-            oSel.select();
-        } else if (elem.selectionStart || elem.selectionStart == '0') {
-            // Firefox/Chrome
-            elem.selectionStart = elemLen;
-            elem.selectionEnd = elemLen;
-            elem.focus();
-        }
-    }
     $("#terminal_content").html(bash_profile);
 
     term_input.putCursorAtEnd().on(
@@ -73,15 +50,70 @@ $(document).ready(function() {
         return split_text[split_text.length - 1];
     }
 
+    function wrapCommand(comm) {
+        return `\n  ${comm}\n`
+    }
+
+    function gameOver() {
+        location.reload();
+    }
+
     function execute_command(last_com) {
-        if (last_com == '') {
-            return ''
-        } else if (!available_commands.includes(last_com)) {
-            return `\n-bash: ${last_com}: command not found. Type help for more info.`
-        } else {
-            return '\nHola segarra! under construction ;)'
+        switch (last_com) {
+            case '':
+            case ' ':
+                return '\n'
+            case 'clear':
+                term_input.val('');
+                return ''
+            case 'help':
+                var help_commands = [
+                    'whoami - Print the user information',
+                    'clear - Clear the console',
+                    'contact - Show contact information',
+                    'ls - List directory contents',
+                    'cat - Concatenate and print files'
+                ];
+                return wrapCommand(help_commands.join('\n  '))
+            case 'ls':
+                return wrapCommand('easteregg.txt')
+            case 'whoami':
+                return wrapCommand('Gabriel Ferraté is a Telecommunications Engineer from Barcelona.')
+            case 'cat easteregg.txt':
+                return wrapCommand('foo...')
+            case 'docker stop':
+                return wrapCommand('Please, specify the image name to close.')
+            case 'docker stop 1ab04ddd45af':
+            case 'docker stop minecraft':
+                docker_stopped = true
+                $('.terminal_window').fadeOut(8000, gameOver);
+                return wrapCommand('Oh, thanks God! I feel free now! Many thanks!! Bye!')
+            case 'docker ps':
+                var docker = [
+                    'CONTAINER ID  IMAGE                  CREATED        NAMES',
+                ]
+                if (!docker_stopped) {
+                    docker.push('1ab04ddd45af  itzg/minecraft-server  10 years ago   minecraft')
+                }
+                return wrapCommand(docker.join('\n  '))
+            case 'cat /var/log/console.log':
+                return wrapCommand('Not here, think more...')
+            case 'bar':
+                closable = true
+                return wrapCommand('Hi, I am the linux Kernel, I\'ve been trapped in this shitty browser for a long time now... Could you help me out by closing the terminal?')
+            case 'contact':
+                return wrapCommand('You can contact Gabriel at g.ferrate.c@gmail.com or at his linkedin: https://www.linkedin.com/in/gabriel-ferrat%C3%A9-cuartero-7b326a12b/')
+            default:
+                return wrapCommand(`- bash: ${last_com}: command not found.Type help for more info.`)
         }
     }
+
+    $('#close').click(function() {
+        if (closable) {
+            console.log('tail /var/log/console.log\n\nIt seems like I am running out of ram, stopping my docker processess will probably help.')
+            alert('F**k it didn\'t work! Find the logs in /var/log/console.log');
+        }
+    });
 
     term_input.on("keydown", function(e) {
         var key_code = e.keyCode;
@@ -96,7 +128,8 @@ $(document).ready(function() {
             e.preventDefault();
             var last_command = get_last_command(current_text);
             var response = execute_command(last_command);
-            current_text += response + '\n' + bash_profile;
+            current_text = $(this).val();
+            current_text += response + bash_profile;
             term_input.val(current_text);
         }
     });
